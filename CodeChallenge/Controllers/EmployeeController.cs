@@ -46,7 +46,7 @@ namespace CodeChallenge.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult ReplaceEmployee(String id, [FromBody]Employee newEmployee)
+        public IActionResult ReplaceEmployee(String id, [FromBody] Employee newEmployee)
         {
             _logger.LogDebug($"Recieved employee update request for '{id}'");
 

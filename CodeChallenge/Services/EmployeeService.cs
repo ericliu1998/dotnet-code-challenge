@@ -21,7 +21,7 @@ namespace CodeChallenge.Services
 
         public Employee Create(Employee employee)
         {
-            if(employee != null)
+            if (employee != null)
             {
                 _employeeRepository.Add(employee);
                 _employeeRepository.SaveAsync().Wait();
@@ -32,7 +32,7 @@ namespace CodeChallenge.Services
 
         public Employee GetById(string id)
         {
-            if(!String.IsNullOrEmpty(id))
+            if (!String.IsNullOrEmpty(id))
             {
                 return _employeeRepository.GetById(id);
             }
@@ -42,7 +42,7 @@ namespace CodeChallenge.Services
 
         public Employee Replace(Employee originalEmployee, Employee newEmployee)
         {
-            if(originalEmployee != null)
+            if (originalEmployee != null)
             {
                 _employeeRepository.Remove(originalEmployee);
                 if (newEmployee != null)

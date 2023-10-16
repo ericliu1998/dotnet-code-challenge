@@ -6,7 +6,7 @@ namespace CodeChallenge.Models
 {
     public class CompensationDb
     {
-        [Key] 
+        [Key]
         public String EmployeeId { get; set; }
         public Employee Employee { get; set; }
         public int Salary { get; set; }

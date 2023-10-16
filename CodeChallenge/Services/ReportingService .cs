@@ -45,7 +45,7 @@ namespace CodeChallenge.Services
             {
                 return 0;
             }
-            
+
             int sum = 0;
 
             foreach (Employee directReport in employee.DirectReports)

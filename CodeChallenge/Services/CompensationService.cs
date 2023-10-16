@@ -24,15 +24,16 @@ namespace CodeChallenge.Services
 
         public Compensation Create(Compensation compensation)
         {
-            Employee employee = _employeeService.GetById(compensation.Employee.EmployeeId);
-            if ( employee != null)
+            if (compensation != null)
             {
-                if (compensation != null)
+                CompensationDb findCompensationDb = _CompensationRepository.GetById(compensation.Employee.EmployeeId);
+
+                if (findCompensationDb == null)
                 {
                     CompensationDb compensationDb = new()
                     {
-                        EmployeeId = employee.EmployeeId,
-                        Employee = employee,
+                        EmployeeId = compensation.Employee.EmployeeId,
+                        Employee = compensation.Employee,
                         Salary = compensation.Salary,
                         EffectiveDate = compensation.EffectiveDate
                     };
@@ -42,18 +43,10 @@ namespace CodeChallenge.Services
 
                     return new Compensation()
                     {
-                        Employee = _employeeService.GetById(compensationDb.EmployeeId),
+                        Employee = compensation.Employee,
                         Salary = compensationDb.Salary,
                         EffectiveDate = compensationDb.EffectiveDate
                     };
-
-                    //compensation.Employee = employee;
-
-                    //_CompensationRepository.Add(compensation);
-                    //_CompensationRepository.SaveAsync().Wait();
-
-
-                    //return compensation;
                 }
             }
 
@@ -63,10 +56,10 @@ namespace CodeChallenge.Services
 
         public Compensation GetById(string employeeId)
         {
-            if(!String.IsNullOrEmpty(employeeId))
+            if (!String.IsNullOrEmpty(employeeId))
             {
                 Employee employee = _employeeService.GetById(employeeId);
-                if ( employee != null)
+                if (employee != null)
                 {
                     CompensationDb compensationDb = _CompensationRepository.GetById(employeeId);
 
@@ -79,13 +72,6 @@ namespace CodeChallenge.Services
                             EffectiveDate = compensationDb.EffectiveDate
                         };
                     }
-
-                    //Compensation compensation = _CompensationRepository.GetById(employeeId);
-
-                    //if (compensation != null)
-                    //{
-                    //    return compensation;
-                    //}
 
                 }
 

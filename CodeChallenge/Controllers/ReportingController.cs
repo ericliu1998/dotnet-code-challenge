@@ -15,11 +15,14 @@ namespace CodeChallenge.Controllers
     {
         private readonly ILogger _logger;
         private readonly IReportingService _ReportingService;
+        private readonly IEmployeeService _employeeService;
 
-        public ReportingController(ILogger<ReportingController> logger, IReportingService ReportingService)
+
+        public ReportingController(ILogger<ReportingController> logger, IReportingService ReportingService, IEmployeeService employeeService)
         {
             _logger = logger;
             _ReportingService = ReportingService;
+            _employeeService = employeeService;
         }
 
 
@@ -30,8 +33,8 @@ namespace CodeChallenge.Controllers
 
             Reporting Reporting = _ReportingService.GetReportingStructure(id);
 
-            //if (Reporting == null)
-            //    return NotFound();
+            if (Reporting == null)
+                return NotFound();
 
             return Ok(Reporting);
         }

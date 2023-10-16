@@ -14,23 +14,42 @@ namespace CodeChallenge.Controllers
     public class CompensationController : ControllerBase
     {
         private readonly ILogger _logger;
-        private readonly ICompensationService _CompensationService;
+        private readonly IEmployeeService _employeeService;
+        private readonly ICompensationService _compensationService;
 
-        public CompensationController(ILogger<CompensationController> logger, ICompensationService CompensationService)
+        public CompensationController(ILogger<CompensationController> logger, IEmployeeService employeeService, ICompensationService compensationService)
         {
             _logger = logger;
-            _CompensationService = CompensationService;
+            _compensationService = compensationService;
+            _employeeService = employeeService;
         }
 
         [HttpPost]
         public IActionResult CreateCompensation([FromBody] Compensation compensation)
         {
-            _logger.LogDebug($"Received Compensation create request for '{compensation.Employee.FirstName} {compensation.Employee.LastName}'");
+            _logger.LogDebug($"Received Compensation create request for {compensation.Employee.EmployeeId}");
 
-            _CompensationService.Create(compensation);
+            if (string.IsNullOrWhiteSpace(compensation.Employee.EmployeeId))
+            {
+                return BadRequest(new { error = "EmployeeId is missing." });
+            }
 
-            return Ok(compensation);
-            //return CreatedAtRoute("getCompensationById", new { id = compensation.Id }, compensation);
+            Employee employee = _employeeService.GetById(compensation.Employee.EmployeeId);
+            if (employee == null)
+            {
+                return NotFound(new { error = $"Unable to find Employee from employeeId: {compensation.Employee.EmployeeId}." });
+            }
+
+            compensation.Employee = employee;
+
+            Compensation returnedCompensation = _compensationService.Create(compensation);
+
+            if (returnedCompensation == null)
+            {
+                return Conflict(new { error = $"Compensation already created for employeeId: {compensation.Employee.EmployeeId}" });
+            }
+
+            return Ok(returnedCompensation);
 
         }
 
@@ -39,7 +58,7 @@ namespace CodeChallenge.Controllers
         {
             _logger.LogDebug($"Received Compensation get request for '{id}'");
 
-            var Compensation = _CompensationService.GetById(id);
+            var Compensation = _compensationService.GetById(id);
 
             if (Compensation == null)
                 return NotFound();
