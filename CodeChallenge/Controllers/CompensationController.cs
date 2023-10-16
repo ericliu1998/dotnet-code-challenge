@@ -49,7 +49,10 @@ namespace CodeChallenge.Controllers
                 return Conflict(new { error = $"Compensation already created for employeeId: {compensation.Employee.EmployeeId}" });
             }
 
-            return Ok(returnedCompensation);
+            //return Ok(returnedCompensation);
+            return CreatedAtRoute("getEmployeeById", new { id = compensation.Employee.EmployeeId }, compensation);
+
+
 
         }
 

@@ -89,25 +89,51 @@ namespace CodeCodeChallenge.Tests.Integration
             // Arrange
             var employee = new Employee()
             {
-                EmployeeId = "03aa1462-ffa9-4978-901b-7c001562cf6f",
+                Department = "Complaints2",
+                FirstName = "Debbie2",
+                LastName = "Downer2",
+                Position = "Receiver2",
+            };
+
+            var requestContent = new JsonSerialization().ToJson(employee);
+
+            // Execute
+            var postRequestTask = _httpClient.PostAsync("api/employee",
+               new StringContent(requestContent, Encoding.UTF8, "application/json"));
+            var response = postRequestTask.Result;
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
+            var newEmployee = response.DeserializeContent<Employee>();
+            Assert.AreEqual(employee.FirstName, newEmployee.FirstName);
+            Assert.AreEqual(employee.LastName, newEmployee.LastName);
+            Assert.AreEqual(employee.Department, newEmployee.Department);
+            Assert.AreEqual(employee.Position, newEmployee.Position);
+
+
+
+            // Arrange
+            var employee2 = new Employee()
+            {
+                EmployeeId = newEmployee.EmployeeId,
                 Department = "Engineering",
                 FirstName = "Pete",
                 LastName = "Best",
                 Position = "Developer VI",
             };
-            var requestContent = new JsonSerialization().ToJson(employee);
+            var requestContent2 = new JsonSerialization().ToJson(employee2);
 
             // Execute
-            var putRequestTask = _httpClient.PutAsync($"api/employee/{employee.EmployeeId}",
-               new StringContent(requestContent, Encoding.UTF8, "application/json"));
-            var putResponse = putRequestTask.Result;
+            var putRequestTask2 = _httpClient.PutAsync($"api/employee/{employee2.EmployeeId}",
+               new StringContent(requestContent2, Encoding.UTF8, "application/json"));
+            var putResponse2 = putRequestTask2.Result;
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.OK, putResponse.StatusCode);
-            var newEmployee = putResponse.DeserializeContent<Employee>();
+            Assert.AreEqual(HttpStatusCode.OK, putResponse2.StatusCode);
+            var UpdateEmployee = putResponse2.DeserializeContent<Employee>();
 
-            Assert.AreEqual(employee.FirstName, newEmployee.FirstName);
-            Assert.AreEqual(employee.LastName, newEmployee.LastName);
+            Assert.AreEqual(employee2.FirstName, UpdateEmployee.FirstName);
+            Assert.AreEqual(employee2.LastName, UpdateEmployee.LastName);
         }
 
         [TestMethod]
